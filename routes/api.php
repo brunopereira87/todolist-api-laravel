@@ -56,6 +56,7 @@ Route::prefix('categories')->group(function(){
   Route::get("/",[CategoryController::class,'read']);
   Route::post("/",[CategoryController::class,'create']);
   Route::get("/{id}",[CategoryController::class,'read']);
+  Route::get("/{category_id}/tasks",[TaskController::class,'readCategoryTasks']);
   Route::put("/{id}",[CategoryController::class,'update']);
   Route::delete("/{id}",[CategoryController::class,'delete']);
 });

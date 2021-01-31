@@ -20,14 +20,12 @@ class AuthController extends Controller
     ]);
   }
   public function login(Request $request){
-    $array['error'] = '';
-
     $email = $request->input('email');
     $password = $request->input('password');
 
     if(!($email && $password)){
       $array['error'] = 'Por favor, envie o email e a senha';
-      return $array;
+      return response()->json($array,400);
     }
 
     $token = auth()->attempt([
@@ -37,13 +35,13 @@ class AuthController extends Controller
 
     if(!$token){
       $array['error'] = 'Email e/ou senha incorretos';
-      return $array;
+      return response()->json($array,404);
     }
 
     $array['token'] = $token;
     $array['user'] = auth()->user();
 
-    return $array;
+    return response()->json($array,200);
   }
 
   public function forgot(){
@@ -66,7 +64,7 @@ class AuthController extends Controller
 
       if($emailExists !== 0){
         $array['error'] = 'Email já cadastrado';
-        return $array;
+        return response()->json($array,401);
       }
 
       $newUser = new User();
@@ -83,7 +81,7 @@ class AuthController extends Controller
 
       if(!$token){
         $array['error'] = 'Erro inesperado';
-        return $array;
+        return response()->json($array,500);
       }
 
       $array['token'] = $token;
@@ -91,6 +89,7 @@ class AuthController extends Controller
     }
     else{
       $array['error'] = 'Você não enviou todos os campos';
+      return response()->json($array,400);
     }
 
     return $array;
