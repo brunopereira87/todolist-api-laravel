@@ -41,6 +41,7 @@ class CategoryController extends Controller
       'id'=> $newCategory->id,
       'name'=> $newCategory->name,
       'icon'=> $newCategory->icon,
+      'tasks'=> 0
     ];
 
     return response()->json($array,201);
@@ -48,7 +49,7 @@ class CategoryController extends Controller
 
   public function read($id = null){
     if($id){
-      $category = Category::find($id);
+      $category = Category::withCount('tasks')->find($id);
 
       if(!Gate::allows('manipulate-category',$category)){
         $array['error'] = 'Categoria não encontrada';
@@ -57,7 +58,11 @@ class CategoryController extends Controller
       $array['category'] = $category;
     }
     else{
-      $array['categories'] = Category::where('user_id', $this->loggedUser['id'])->get();
+      $categories = Category::where('user_id', $this->loggedUser['id'])
+      ->withCount('tasks')
+      ->get();
+
+      $array['categories'] = $categories;
     }
 
     return response()->json($array,200);
