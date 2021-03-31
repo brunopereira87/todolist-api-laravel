@@ -56,7 +56,7 @@ class TaskController extends Controller
 
   public function read(Request $request, $id = null) {
     $page = intval($request->query('page','1'));
-    $perPage = intval($request->query('limit','2'));
+    $perPage = intval($request->query('limit','5'));
     $sort = $request->query('sort','deadline');
 
     if($id){
